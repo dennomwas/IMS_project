@@ -1,5 +1,6 @@
 import sqlite3
 import datetime
+import csv
 
 #connect to database
 db_con = sqlite3.connect("inventory.db")
@@ -27,8 +28,38 @@ def add_items():
     conn.execute("INSERT INTO inventory_items VALUES (null,?,?,?,?,DATETIME('now','localtime'),?);",\
                  (name, description, quantity, item_cost, status ))
     db_con.commit()
-    
-add_items()
+
+def items_list():
+    #select all items from the database
+    conn.execute("SELECT * FROM inventory_items")
+    items = conn.fetchall()
+    #display the items 
+    return(items)
+
+def export_data():
+    #export data to an external file
+    with open('exported_items.csv','w',newline = '') as fp:
+        a = csv.writer(fp,delimiter = ',')
+        a.writerows(items_list())
+	print("Successfully exported items to 'exported_items.csv' file on the computer!")
+        
+def view_item():
+    #view a single item from the database
+    print("Enter the name of the item to view")
+    print("")
+    name = input("Enter item name: ")
+    conn.execute("SELECT * FROM inventory_items WHERE name = ?",(name,))
+    get_item = conn.fetchone()
+    print(get_item)
+
+def remove_item():
+    #remove a single item from the database
+    print("Enter the name of the item to Delete")
+    print("")
+    name = input("Enter name of item to delete: ")
+    conn.execute("DELETE FROM inventory_items WHERE name = ?",(name,))
+    db_con.commit()
+    print("Successfully removed item from the database!")
 
 
 
@@ -44,19 +75,4 @@ add_items()
 
 
 
-
-
-"""class InventoryManagement():
-	def __init__(self, id, name, desc, quantity, cost_per_item, date_added, status):
-		self.id = id
-		self.name = name
-		self.desc = desc
-		self.quantity = quantity
-		self.cost_per_item = cost_per_item
-		self.date_added = date_added
-		self.status = status
-
-	#add items
-	def item_details():
-"""
 
