@@ -29,8 +29,11 @@ def add_items():
     conn.execute("INSERT INTO inventory_items VALUES (null, ? , ? , ? , ?, DATETIME('now','localtime'),0);",\
                  (name, description, quantity, item_cost))
     db_con.commit()
+<<<<<<< HEAD
     print("Item has been added successfully\n")
     print("Add another item")+ add_items()
+=======
+>>>>>>> d22aeef6220dc5a9ece7c6802ffe9f7c696048ab
 
 def items_list():
     #select all items from the database
@@ -44,6 +47,10 @@ def export_data():
     with open('exported_items.csv','w',newline = '') as fp:
         a = csv.writer(fp,delimiter = ',')
         a.writerows(items_list())
+<<<<<<< HEAD
+=======
+	print("Successfully exported items to 'exported_items.csv' file on the computer!")
+>>>>>>> d22aeef6220dc5a9ece7c6802ffe9f7c696048ab
         
 def view_item():
     #view a single item from the database
