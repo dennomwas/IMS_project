@@ -120,8 +120,13 @@ def asset_value():
     #get total sum
     #display items in a list
     conn.execute("SELECT item_id,name,SUM(item_cost*quantity) from inventory_items group by item_id")
-    get_total = conn.fetchone()
+    get_total = conn.fetchall()
     print(get_total)
+    print("Your total asset value is: ")
+    conn.execute("SELECT SUM(item_cost*quantity) from inventory_items")
+    get_sum = conn.fetchone()
+    print(get_sum)
+    
 def search_items():
     #search for a word in name and description columns
     print("SEARCH FOR AN ITEM")
