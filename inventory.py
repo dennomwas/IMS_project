@@ -78,7 +78,13 @@ def asset_value():
     conn.execute("SELECT item_id,name,SUM(item_cost*quantity) from inventory_items group by item_id")
     get_total = conn.fetchone()
     print(get_total)
-
+def search_items():
+    #search for a word in name and description columns
+    search_item =input("Enter item to search ")
+    conn.execute("SELECT item_id, name, description FROM inventory_items WHERE name LIKE '%"+search_item+"%'")
+    items_found = conn.fetchall()
+    print(items_found)
+    #list in a table
 
 
 
