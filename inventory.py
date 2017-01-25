@@ -63,12 +63,30 @@ def view_item():
 
 def remove_item():
     #remove a single item from the database
-    print("Enter the name of the item to Delete")
-    print("")
-    name = input("Enter name of item to delete: ")
-    conn.execute("DELETE FROM inventory_items WHERE name = ?",(name,))
-    db_con.commit()
-    print("Successfully removed item from the database!")
+    print("To Delete an item/n")
+    
+    del_by_id = set([1])
+    del_by_name = set([2])
+    
+    item_to_del = int(input("Enter 1 to delete item by item id or 2 to delete by name: "))
+    
+    if item_to_del in del_by_id:
+        get_item_id = input("Enter Item Id: ")
+        conn.execute("SELECT * FROM inventory_items WHERE item_id = ?",(get_item_id,))
+        get_del_1 = conn.fetchone()
+        print(get_del_1)
+        
+        yes = set(['y','ye','yes',''])
+        no = set(['no','n'])
+        prompt_to_delete = input("Delete? Enter yes or no :")
+        if prompt_to_delete in yes:
+            conn.execute("DELETE FROM inventory_items WHERE item_id = ?",(get_item_id,))
+            db_con.commit()
+            print("Deleted Successfully")
+        elif prompt_to_delete in no:
+            print("thank you")
+        else:
+            print("invalid input")
 
 def asset_value():
     #get the total value of assets(item_cost * quantity)
