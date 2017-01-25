@@ -54,12 +54,30 @@ def export_data():
         
 def view_item():
     #view a single item from the database
-    print("Enter the name of the item to view")
-    print("")
-    name = input("Enter item name: ")
-    conn.execute("SELECT * FROM inventory_items WHERE name = ?",(name,))
+    #show the item in a table
+    #if not there, give feedback
+    # ask if to try again
+    print("Enter the name of the item to view\n")
+    item_to_view = input("Enter item ID: ")
+    conn.execute("SELECT * FROM inventory_items WHERE item_id = ?",(item_to_view,))
     get_item = conn.fetchone()
-    print(get_item)
+    x = str(get_item)
+    if item_to_view not in x:
+        print("Item is not in the database")
+        
+        print("View another item? 'YES' to continue 'NO' to quit")
+        yes = set(['y','ye','yes',''])
+        no = set(['no','n'])
+        
+        view_again = input(": ")
+        if view_again in yes:
+            view_item()
+        elif view_again in no:
+            print("Thank you")
+        else:
+            print("invalid input")
+    else:
+        print(get_item)
 
 def remove_item():
     #remove an item from the database
@@ -106,11 +124,28 @@ def asset_value():
     print(get_total)
 def search_items():
     #search for a word in name and description columns
-    search_item =input("Enter item to search ")
+    print("SEARCH FOR AN ITEM")
+    print("--------------------\n")
+    search_item =input("Enter item name to search: ")
     conn.execute("SELECT item_id, name, description FROM inventory_items WHERE name LIKE '%"+search_item+"%'")
     items_found = conn.fetchall()
-    print(items_found)
-    #list in a table
+    x = str(items_found)
+    if search_item not in x:
+        print("Item is not in the database")
+        
+        yes = set(['y','ye','yes',''])
+        no = set(['no','n'])
+        search_again = input("Search another item? 'YES' to continue 'NO' to quit: ")
+        if search_again in yes:
+            search_items()
+        elif search_again in no:
+            print("Thank you for your time!")
+        else:
+            print("invalid input, please enter y/n")
+    else:
+        print("ITEMS FOUND:")
+        print("-------------")
+        print(items_found)  
 
 
 
