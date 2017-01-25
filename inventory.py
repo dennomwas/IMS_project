@@ -70,6 +70,15 @@ def remove_item():
     db_con.commit()
     print("Successfully removed item from the database!")
 
+def asset_value():
+    #get the total value of assets(item_cost * quantity)
+    #total for each item
+    #get total sum
+    #display items in a list
+    conn.execute("SELECT item_id,name,SUM(item_cost*quantity) from inventory_items group by item_id")
+    get_total = conn.fetchone()
+    print(get_total)
+
 
 
 
