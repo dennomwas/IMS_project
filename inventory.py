@@ -62,20 +62,28 @@ def view_item():
     print(get_item)
 
 def remove_item():
-    #remove a single item from the database
+    #remove an item from the database
     print("To Delete an item/n")
-    
-    del_by_id = set([1])
-    del_by_name = set([2])
-    
-    item_to_del = int(input("Enter 1 to delete item by item id or 2 to delete by name: "))
-    
-    if item_to_del in del_by_id:
-        get_item_id = input("Enter Item Id: ")
-        conn.execute("SELECT * FROM inventory_items WHERE item_id = ?",(get_item_id,))
-        get_del_1 = conn.fetchone()
-        print(get_del_1)
+    get_item_id = input("Enter Item Id: ")
+    conn.execute("SELECT * FROM inventory_items WHERE item_id = ?",(get_item_id,))
+    get_del_1 = conn.fetchone()
+    x=str(get_del_1)
+    if get_item_id not in x:
+        print("item not found")
+        print("Do you want to search again? yes to continue no to quit")
         
+        yes = set(['y','ye','yes',''])
+        no = set(['no','n'])
+        
+        search_again = input(": ")
+        if search_again in yes:
+            remove_item()
+        elif search_again in no:
+            print("Thank you")
+        else:
+            print("invalid input")
+    else:
+        print(get_del_1)
         yes = set(['y','ye','yes',''])
         no = set(['no','n'])
         prompt_to_delete = input("Delete? Enter yes or no :")
