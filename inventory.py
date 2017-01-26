@@ -12,27 +12,34 @@ conn = db_con.cursor()
 def add_items():
     #create table
     conn.execute("CREATE TABLE IF NOT EXISTS inventory_items( \
-                    id INTEGER PRIMARY KEY, name TEXT, \
+                    id INTEGER PRIMARY KEY UNIQUE, name TEXT, \
                     description TEXT, quantity INTEGER, item_cost REAL, \
                     date_added NUMERIC, status NUMERIC ) ")
 
     #get user input
-    print("Enter an Item")
-    print("")
-    #id = input("Enter ID: ")
-    name = input("Enter item name: ")
-    description = input("Enter desc: ")
-    quantity = input("Enter Quantity: ")
-    item_cost = input("Enter amount: ")
-    #date_added = input("Enter date: ")
-    status = input("Enter Status: ")
+    print("Enter an Item\n")
+    name = input("Enter item name     : ")
+    description = input("Enter item description: ")
+    quantity = input("Enter Quantity  : ")
+    item_cost = input("Enter amount   : ")
+
     #run sql command and commit data to db
-    conn.execute("INSERT INTO inventory_items VALUES (null, ? , ? , ? , ?, DATETIME('now','localtime'),0);",\
+    conn.execute("INSERT INTO inventory_items VALUES (null, ? , ? , ? , ?, DATETIME('now','localtime'),'');",\
                  (name, description, quantity, item_cost))
     db_con.commit()
 
     print("Item has been added successfully\n")
-    print("Add another item")+ add_items()
+    print("Add another item (y/n)")
+    yes = set(['y','ye','yes',''])
+    no = set(['no','n'])
+    add_again = input(": ")
+    if add_again in yes:
+        add_items()
+    elif add_again in no:
+        print("Thank you, Perform another action or quit system")
+    else:
+        print("Invalid input, enter 'y/n'")
+
 
 def items_list():
     #select all items from the database
@@ -156,11 +163,17 @@ def inventory_console():
         print tabulate([[1,'Add an Item'], [2, 'View an Item'], [3, 'Remove an Item'],\
                         [4, 'List all Items'], [5,'Export Items'], [6, 'Check Asset Value'],\
                         [0.,'Quit']], headers = ['','Select an Option'], tablefmt = 'psql') 
-
-       
+   
         input("Please select an option: ")
         x = int(x)
+        if x == 0:
+            #exit the system
+            print tabulate([['Thank you for interacting with our system'],\
+                ['We value your feedback: githinji.mwangi@gmail.'],\
+                ['We Appreciate your support: MPESA No. 0723 042 098']], tablefmt = 'psql')
+            break
 
+add_items()
 
 
 
