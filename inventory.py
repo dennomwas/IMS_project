@@ -1,6 +1,7 @@
 import sqlite3
 import datetime
 import csv
+from tabulate import tabulate
 
 #connect to database
 db_con = sqlite3.connect("inventory.db")
@@ -149,8 +150,16 @@ def search_items():
         print(items_found)  
 
 
+def inventory_console():
+    while True:
+        print tabulate(["INVENTORY MANAGEMENT SYSTEM"], tablefmt = 'rst')
+        print tabulate([[1,'Add an Item'], [2, 'View an Item'], [3, 'Remove an Item'],\
+                        [4, 'List all Items'], [5,'Export Items'], [6, 'Check Asset Value'],\
+                        [0.,'Quit']], headers = ['','Select an Option'], tablefmt = 'psql') 
 
-items_list()
+       
+        input("Please select an option: ")
+        x = int(x)
 
 
 
