@@ -1,11 +1,12 @@
-#import database 
-import sqlite3
-#library for system-specific parameters and functions
-import sys
 #library for time and date parameters
 import datetime
 #library to get comma separated values for external export
 import csv
+#import database 
+import sqlite3
+#library for system-specific parameters and functions
+import sys
+
 #library to style data in tables
 from prettytable import PrettyTable
 
@@ -50,23 +51,34 @@ def add_items():
 def items_list():
     #select all items from the database
     connect.execute("SELECT * FROM inventory_items")
-    for items in connect.fetchall():
-            print([items])
+
+    col_names = [cn[0] for cn in connect.description]
+    rows = connect.fetchall()
+
+    x = PrettyTable(col_names)
+    x.align[col_names[1]] = 'l'
+    x.align[col_names[2]] = 'r'
+    for row in rows:
+        x.add_row(row)
+    print(x)
         #display the items
         #print(items) 
         #print tabulate([items], headers = ['id','name','description','quantity','item_cost','date_added','status'], tablefmt = 'psql')
 
 def export_data():
     #export data to an external file
-    with open('exported_items.csv','w',newline = '') as csvfile:
+    csv_path = input("Please enter destination file name:\n")
+    with open(csv_path,'w',newline = '') as csvfile:
         a = csv.writer(csvfile,delimiter = ',')
         connect.execute("SELECT * FROM inventory_items")
         data_to_export = connect.fetchall()
+        a.writerow(['id'] + ['name'] + ['description'])
         a.writerows(data_to_export) 
-            #print("Successfully exported items to 'exported_items.csv' file on the computer!")
-        #else:
-            #print("Not exported")
+        print("Successfully exported items to "+csv_path+" file on the computer!")
 
+def checkin_checkout():
+    print("WORK IN PROGRESS!\n")
+    print("FUNCTION COMING SOON")
         
 def view_item():
     #view a single item from the database
@@ -93,30 +105,39 @@ def view_item():
         else:
             print("invalid input, please enter y/n")
     else:
-        table
-        print([get_item])
+        table = PrettyTable(['ID','NAME','DESCRIPTION','QUANTITY','ITEM COST','DATETIME','STATUS'])
+        table.add_row(['get_item'])
+        print(table)
 
 def remove_item():
+    #print the entire table first
+    print(items_list())
     #remove an item from the database
-    print("To Delete an item/n")
+    print("TO DELETE AN ITEM...\n") 
     get_item_id = input("Enter Item Id: ")
-    connect.execute("SELECT * FROM inventory_items WHERE item_id = ?",(get_item_id,))
+    #catch errors if input is not an integer
+    try:
+        x =int(get_item_id) 
+        connect.execute("SELECT * FROM inventory_items WHERE item_id = ?",(x,))
+    except ValueError:
+        print("Not a valid number!")
+        return 
     get_item_to_remove = connect.fetchone()
     x=str(get_item_to_remove)
     if get_item_id not in x:
         print("item not found")
-        print("Do you want to search again? yes to continue no to quit")
+        print("Do you want to search again? Please enter y/n\n")
         
         yes = set(['y','ye','yes',''])
         no = set(['no','n'])
         
-        search_again = input(": ")
+        search_again = input("Enter Item Id: ")
         if search_again in yes:
             remove_item()
         elif search_again in no:
             print("Thank you, Perform another action or quit system")
         else:
-            print("invalid input, please enter y/n")
+            print("invalid input, Please enter y/n")
     else:
         print(get_item_to_remove)
         yes = set(['y','ye','yes',''])
@@ -185,10 +206,13 @@ def inventory_console():
         console.add_row(['5','Export Items'])
         console.add_row(['6','Search Items'])
         console.add_row(['7','Check Asset Value'])
+        console.add_row(['8','Check Item In/Out'])
         console.add_row(['0','QUIT'])
         print(console)
 
+        print("")
         x =input("Please select an option: ")
+        print("")
         x = int(x)
         if x == 0:
             #exit the system
@@ -218,6 +242,9 @@ def inventory_console():
         elif x == 7:
             #check asset value
             asset_value()
+        elif x == 8:
+            #check asset value
+            checkin_checkout()
         else:
             print("Invalid input, Enter No. between 0 - 9")
 
