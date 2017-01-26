@@ -29,28 +29,24 @@ def add_items():
     conn.execute("INSERT INTO inventory_items VALUES (null, ? , ? , ? , ?, DATETIME('now','localtime'),0);",\
                  (name, description, quantity, item_cost))
     db_con.commit()
-<<<<<<< HEAD
+
     print("Item has been added successfully\n")
     print("Add another item")+ add_items()
-=======
->>>>>>> d22aeef6220dc5a9ece7c6802ffe9f7c696048ab
 
 def items_list():
     #select all items from the database
     conn.execute("SELECT * FROM inventory_items")
-    items = conn.fetchall()
+    for items in conn.fetchall():
     #display the items 
-    return(items)
+        print([items])
 
 def export_data():
     #export data to an external file
     with open('exported_items.csv','w',newline = '') as fp:
         a = csv.writer(fp,delimiter = ',')
         a.writerows(items_list())
-<<<<<<< HEAD
-=======
 	print("Successfully exported items to 'exported_items.csv' file on the computer!")
->>>>>>> d22aeef6220dc5a9ece7c6802ffe9f7c696048ab
+
         
 def view_item():
     #view a single item from the database
@@ -126,7 +122,7 @@ def asset_value():
     conn.execute("SELECT SUM(item_cost*quantity) from inventory_items")
     get_sum = conn.fetchone()
     print(get_sum)
-    
+
 def search_items():
     #search for a word in name and description columns
     print("SEARCH FOR AN ITEM")
@@ -154,7 +150,7 @@ def search_items():
 
 
 
-
+items_list()
 
 
 
